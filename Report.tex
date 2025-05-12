@@ -1,0 +1,901 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{parskip}
+\usepackage{fullpage}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\geometry{margin=1in}
+
+\title{CPSC-406 Course Report}
+\author{Traehan Arnold \\ Chapman University}
+\date{\today}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{gray!10},
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    stringstyle=\color{orange},
+    commentstyle=\color{gray},
+    showstringspaces=false,
+    breaklines=true
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document serves as a cumulative report for the CPSC-406 course. Each week includes homework solutions, deeper explorations of the topics, and original questions aimed at reinforcing understanding and inspiring further inquiry. The structure follows course guidelines and demonstrates proficiency in technical writing and mathematical reasoning using \LaTeX.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Week 1: Intro To Automata}
+
+\subsection{Homework}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Problem 1:} Vending Machine Automaton
+    \\ \textbf{Determine the accepted words for reaching state 25} 
+
+    \begin{lstlisting}[language=Python]
+        accepted_words_vending_machine = [
+            "55555",
+            "55510",
+            "55105",
+            "51055",
+            "10555",
+            "10105"
+        ]
+        \end{lstlisting}
+        
+        Any sequence of 5s and 10s summing to 25 is accepted.
+    
+    \item \textbf{Problem 2:} Turnstile Automaton
+    \\ \textbf{Describe accepted words via a regular expression} 
+
+    \begin{lstlisting}[language=Python]
+        regular_expression_turnstile = r"pay (pay | push pay)*"
+        \end{lstlisting}
+        
+        Explanation:
+        \begin{itemize}
+            \item \texttt{pay} must be the first input to unlock the turnstile.
+            \item Additional \texttt{pay} keeps it unlocked.
+            \item \texttt{push pay} locks and then unlocks, repeating indefinitely.
+        \end{itemize}
+        
+    \item \textbf{Problem 3:} Binary Language Classification
+    \\ \textbf{Determine which words belong to L1, L2, and L3.}
+
+    \begin{lstlisting}[language=Python]
+    binary_language_classification = {
+    "10011": {"L1": False, "L2": False, "L3": False},
+    "100": {"L1": False, "L2": False, "L3": False},
+    "10100100": {"L1": True, "L2": True, "L3": True},
+    "1010011100": {"L1": True, "L2": False, "L3": True},
+    "11110000": {"L1": False, "L2": True, "L3": True}
+    }
+    \end{lstlisting}
+
+    \item \textbf{Problem 4:} DFA Accepting States
+    \\ \textbf{Determine which words end in the accepting state q1.}
+
+    \begin{lstlisting}[language=Python]
+        dfa_accepting_states = {
+        "0010": True,
+        "1101": True,
+        "1100": False
+    }
+        \end{lstlisting}
+
+Words \texttt{"0010"} and \texttt{"1101"} end in q1, while \texttt{"1100"} does not.
+    
+    % Add more problems as needed
+\end{itemize}
+
+\subsection{Exploration}
+The introduction to automata theory lays the foundation for understanding how abstract machines can be used to model computation. At its core, automata theory provides a framework for recognizing patterns and processing input based on defined rules. Deterministic Finite Automata (DFAs) are machines where each state has exactly one transition for every input symbol, making them predictable and easy to implement in practice—for example, in lexical analyzers within compilers or in validating input formats like dates or phone numbers. Non-deterministic Finite Automata (NFAs), on the other hand, allow multiple or zero transitions for the same symbol from a given state, representing a more flexible and intuitive model of choice and ambiguity in computation. While NFAs are theoretically equivalent in power to DFAs, they often lead to more concise designs and are foundational in the implementation of tools like regular expression engines. This contrast between DFAs and NFAs reveals a powerful insight: non-determinism, though conceptually more complex, can simplify design and reveal underlying symmetries in language structure, even when determinism is needed for implementation.
+
+\subsection{Question}
+In the beginning, how did the development of automata theory influence early computing and programming languages, and were there any key breakthroughs that directly shaped how we design and understand computation today?
+
+% Repeat \\section for each week as needed
+\section{Week 3: Operations on Automata}
+\subsection{Homework}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Problem 1:} Description of the Language Accepted by $\mathcal{A}^{(2)}$
+The automaton $\mathcal{A}^{(2)}$ accepts the language:
+\[
+L(\mathcal{A}^{(2)}) = \{ w \in \{a,b\}^* \mid |w| \text{ is odd and every letter at an odd position is } a \}
+\]
+That is, all words over the alphabet $\{a,b\}$ that have an odd length, and every letter in an odd-numbered position (1st, 3rd, 5th, etc.) is the letter $a$.
+
+\section*{2. Computation of Extended Transition Functions}
+
+\subsection*{a) For $\mathcal{A}^{(1)}$, compute $\widehat{\delta^{(1)}}(1, abaa)$}
+
+Given that $\mathcal{A}^{(1)}$ accepts non-empty words where no two consecutive letters are the same, and assuming the states are numbered, we proceed step by step:
+
+\begin{itemize}
+    \item Start at state $1$
+    \item Read $a$: move to state $2$
+    \item Read $b$: move to state $1$
+    \item Read $a$: move to state $2$
+    \item Read $a$: since the previous letter was also $a$, and two consecutive letters are the same, this transition is invalid.
+\end{itemize}
+
+Therefore, the computation halts, and the word $abaa$ is rejected by $\mathcal{A}^{(1)}$.
+
+\subsection*{b) For $\mathcal{A}^{(2)}$, compute $\widehat{\delta^{(2)}}(1, abba)$}
+
+Assuming the transition function $\delta^{(2)}$ is defined as per the automaton's description:
+
+\begin{itemize}
+    \item Start at state $1$
+    \item Read $a$: move to state $2$
+    \item Read $b$: move to state $3$
+    \item Read $b$: move to state $2$
+    \item Read $a$: move to state $3$
+\end{itemize}
+
+After processing the entire input $abba$, the automaton ends in state $3$. If state $3$ is an accepting state, then the word is accepted; otherwise, it is rejected. Based on the language description, since $abba$ has even length and the language requires odd length, $abba$ is rejected by $\mathcal{A}^{(2)}$.
+
+\section*{Problem Statement}
+
+Let \( n \) be a natural number, and let \( P(m) \) be a property pertaining to the natural numbers such that whenever \( P(m) \) is true, \( P(m++) \) is also true. Show that if \( P(n) \) is true, then \( P(m) \) is true for all \( m \geq n \). This principle is sometimes referred to as the principle of induction starting from the base case \( n \).
+
+\section*{Solution}
+
+We aim to prove that if \( P(n) \) is true and \( P(m) \Rightarrow P(m++) \) holds for all \( m \in \mathbb{N} \), then \( P(m) \) is true for all \( m \geq n \).
+
+\subsection*{Approach}
+
+Define a new property \( Q(k) := P(n + k) \) for \( k \in \mathbb{N} \). Our goal is to show that \( Q(k) \) is true for all \( k \in \mathbb{N} \), which would imply that \( P(m) \) is true for all \( m \geq n \).
+
+\subsection*{Base Case}
+
+For \( k = 0 \), we have \( Q(0) = P(n + 0) = P(n) \), which is given to be true.
+
+\subsection*{Inductive Step}
+
+Assume \( Q(k) \) is true for some \( k \in \mathbb{N} \), i.e., \( P(n + k) \) is true. Since \( P(m) \Rightarrow P(m++) \) for all \( m \), it follows that \( P(n + k) \Rightarrow P((n + k)++) = P(n + k + 1) \). Therefore, \( Q(k + 1) = P(n + k + 1) \) is true.
+
+\subsection*{Conclusion}
+
+By the principle of mathematical induction, \( Q(k) \) is true for all \( k \in \mathbb{N} \). Consequently, \( P(m) \) is true for all \( m \geq n \).
+
+\end{itemize}
+
+\section{Week 4: NFAs and Determinization}
+
+\subsection{Homework}
+
+\begin{itemize}[leftmargin=*]
+
+\item \textbf{Step 1: Viewing DFA as an NFA}  
+A DFA is a special case of an NFA where each state has exactly one transition per input symbol. Since NFAs allow multiple (or no) transitions for a symbol, any DFA can be interpreted as an NFA by wrapping each transition in a singleton set.
+
+\item \textbf{Step 2: Constructing NFA $A'$ from DFA $A$}
+
+Given:
+\begin{itemize}
+    \item Start state: $1$
+    \item Transitions:
+    \[
+    \delta(1, b) = 1,\quad \delta(1, a) = 2,\quad \delta(2, a) = 2,\quad \delta(2, b) = 3,\quad \delta(3, a) = 3,\quad \delta(3, b) = 3
+    \]
+\end{itemize}
+
+Then the equivalent NFA $A'$ is defined as:
+\[
+A' = (Q', \Sigma, \delta': Q' \times \Sigma \rightarrow \mathcal{P}(Q'), q'_0, F')
+\]
+with:
+\[
+Q' = \{1, 2, 3\},\quad \Sigma = \{a, b\},\quad \delta'(q, x) = \{\delta(q, x)\},\quad q'_0 = 1,\quad F' = \{3\}
+\]
+
+\item \textbf{Step 3: Justification}
+
+Since each transition in the DFA becomes a singleton set in the NFA, $A$ and $A'$ recognize the same language:  
+\[
+L(A) = L(A')
+\]
+
+\item \textbf{Language Accepted by $A$}
+
+The NFA $A$ accepts all binary strings that contain at least one occurrence of the substring ``00'' or end in state $q_3$.
+
+\item \textbf{Specification of $A$}
+
+\begin{itemize}
+    \item $Q = \{q_0, q_1, q_2, q_3\}$
+    \item $\Sigma = \{0, 1\}$
+    \item Start state: $q_0$
+    \item Accepting state: $F = \{q_3\}$
+    \item Transition function:
+    \[
+    \begin{array}{c|cc}
+    \delta & 0 & 1 \\
+    \hline
+    q_0 & \{q_0\} & \{q_0, q_1\} \\
+    q_1 & \emptyset & \{q_2\} \\
+    q_2 & \{q_1, q_3\} & \emptyset \\
+    q_3 & \{q_3\} & \{q_3\} \\
+    \end{array}
+    \]
+\end{itemize}
+
+\item \textbf{Extended Transition Function $\widehat{\delta}(q_0, 10110)$}
+
+Step-by-step:
+\begin{align*}
+\widehat{\delta}(q_0, 1) &= \{q_0, q_1\} \\
+\widehat{\delta}(\{q_0, q_1\}, 0) &= \{q_0\} \\
+\widehat{\delta}(\{q_0\}, 1) &= \{q_0, q_1\} \\
+\widehat{\delta}(\{q_0, q_1\}, 1) &= \{q_0, q_2\} \\
+\widehat{\delta}(\{q_0, q_2\}, 0) &= \{q_0, q_1, q_3\}
+\end{align*}
+
+Since $q_3$ is in the final set, the word \texttt{10110} is accepted.
+
+\item \textbf{Paths for $v = 1100$ and $w = 1010$}
+
+\begin{itemize}
+    \item $v = 1100$ reaches $q_3$, so it is accepted.
+    \item $w = 1010$ does not reach $q_3$, so it is rejected.
+\end{itemize}
+
+\item \textbf{Determinization: DFA $A_D$}
+
+Using the power set construction, the DFA states are subsets of $\{q_0, q_1, q_2, q_3\}$. The accepting states are those that include $q_3$.
+
+\item \textbf{Minimization of $A_D$}
+
+Since $L(A) = L(A_D)$, we apply minimization to merge equivalent states and obtain the smallest DFA that accepts the same language.
+
+\end{itemize}
+
+\subsection{Exploration}
+
+This assignment deepened the understanding of how NFAs and DFAs relate, particularly through the power set construction and the minimization process. Viewing DFAs as restricted NFAs reveals a hierarchy of expressive power that is theoretically equal, but practically distinct. Minimization emphasizes efficiency in state machines—a crucial aspect in compiler optimization and pattern recognition.
+
+\subsection{Question}
+
+In practice, how does determinization affect the efficiency of automata-based tools (e.g., regex engines), and are there modern alternatives to the power set construction to handle large or infinite state spaces more efficiently?
+
+\section{Week 5: Regular Expressions and DFA Minimization}
+
+\subsection{Homework}
+
+\begin{itemize}[leftmargin=*]
+
+\item \textbf{Exercise 3.2.1: DFA Regular Expressions and State Elimination}
+
+\textbf{Given Transition Table:}
+
+\[
+\begin{array}{c|cc}
+    & 0 & 1 \\
+    \hline
+    \rightarrow q_1 & q_2 & q_1 \\
+    q_2 & q_3 & q_1 \\
+    *q_3 & q_3 & q_2 \\
+\end{array}
+\]
+
+\textbf{a) Initial Regular Expressions \( R^{(0)}_{ij} \)}
+
+\[
+\begin{aligned}
+R^{(0)}_{11} &= \varepsilon &\quad R^{(0)}_{12} &= 0 &\quad R^{(0)}_{13} &= \emptyset \\
+R^{(0)}_{21} &= 1 &\quad R^{(0)}_{22} &= \varepsilon &\quad R^{(0)}_{23} &= 0 \\
+R^{(0)}_{31} &= \emptyset &\quad R^{(0)}_{32} &= 1 &\quad R^{(0)}_{33} &= 0 \mid \varepsilon \\
+\end{aligned}
+\]
+
+\textbf{b) Regular Expressions \( R^{(1)}_{ij} \) (using \( q_1 \) as intermediate)}
+
+\[
+\begin{aligned}
+R^{(1)}_{11} &= \varepsilon &\quad R^{(1)}_{12} &= 0 &\quad R^{(1)}_{13} &= \emptyset \\
+R^{(1)}_{21} &= 1 &\quad R^{(1)}_{22} &= \varepsilon \mid 10 &\quad R^{(1)}_{23} &= 0 \\
+R^{(1)}_{31} &= \emptyset &\quad R^{(1)}_{32} &= 1 &\quad R^{(1)}_{33} &= 0 \\
+\end{aligned}
+\]
+
+\textbf{c) Regular Expressions \( R^{(2)}_{ij} \) (using \( q_1 \) and \( q_2 \) as intermediate)}
+
+\[
+\begin{aligned}
+R^{(2)}_{11} &= \varepsilon \mid 0(10)^*1 \\
+R^{(2)}_{12} &= 0 \mid 0(10)^*10 \\
+R^{(2)}_{13} &= 0(10)^*0 \\
+R^{(2)}_{23} &= 0 \mid 10(10)^*0 \\
+R^{(2)}_{33} &= 0 \mid 1(10)^*0 \\
+\end{aligned}
+\]
+
+\textbf{d) Final Regular Expression:}
+
+\[
+R = 0(10)^*0
+\]
+
+\textbf{e) State Elimination Method:}
+
+After eliminating \( q_2 \), we derive:
+
+\[
+R = (1 \mid 01)00(0)
+\]
+
+\vspace{1em}
+
+\item \textbf{Exercise 3.2.2: Another DFA Regular Expression Conversion}
+
+\textbf{Given Transition Table:}
+
+\[
+\begin{array}{c|cc}
+    & 0 & 1 \\
+    \hline
+    \rightarrow q_1 & q_2 & q_3 \\
+    q_2 & q_1 & q_3 \\
+    *q_3 & q_2 & q_1 \\
+\end{array}
+\]
+
+\textbf{a) Initial Regular Expressions \( R^{(0)}_{ij} \)}
+
+\[
+\begin{aligned}
+R^{(0)}_{11} &= \varepsilon &\quad R^{(0)}_{12} &= 0 &\quad R^{(0)}_{13} &= 1 \\
+R^{(0)}_{21} &= 0 &\quad R^{(0)}_{22} &= \varepsilon &\quad R^{(0)}_{23} &= 1 \\
+R^{(0)}_{31} &= 1 &\quad R^{(0)}_{32} &= 0 &\quad R^{(0)}_{33} &= \varepsilon \\
+\end{aligned}
+\]
+
+\textbf{b) Regular Expressions \( R^{(1)}_{ij} \) (using \( q_1 \) as intermediate)}
+
+\[
+\begin{aligned}
+R^{(1)}_{12} &= 0 &\quad R^{(1)}_{13} &= 1 \\
+R^{(1)}_{22} &= \varepsilon \mid 00 &\quad R^{(1)}_{23} &= 1 \mid 01 \\
+R^{(1)}_{33} &= \varepsilon \mid 11 \\
+\end{aligned}
+\]
+
+\textbf{c) Final Regular Expression (from \( q_1 \) to \( q_3 \)):}
+
+\[
+R = 1 \mid 0(00)^*(1 \mid 01)
+\]
+
+\textbf{d) State Elimination Result:}
+
+\[
+R = (1 \mid 0(00)^*1)
+\]
+
+\vspace{1em}
+
+\item \textbf{Exercise 4.4.1: DFA Minimization}
+
+\textbf{Given Transition Table:}
+
+\[
+\begin{array}{c|cc}
+    & 0 & 1 \\
+    \hline
+    \rightarrow A & B & A \\
+    B & A & C \\
+    C & D & B \\
+    *D & D & A \\
+    E & D & F \\
+    F & G & E \\
+    G & F & G \\
+    H & G & D \\
+\end{array}
+\]
+
+\textbf{a) Distinguishability Table:}
+
+Mark all pairs with one final and one non-final state. States \( E, F, G \) are indistinguishable and can be merged.
+
+\textbf{b) Minimized DFA:}
+
+Merge \( E, F, G \to \text{EFG} \)
+
+\[
+\begin{array}{c|cc|c}
+    \text{State} & 0 & 1 & \text{Accept?} \\
+    \hline
+    \rightarrow A & B & A & No \\
+    B & A & C & No \\
+    C & D & B & No \\
+    D & D & A & Yes \\
+    \text{EFG} & \text{EFG} & \text{EFG} & No \\
+    H & \text{EFG} & D & No \\
+\end{array}
+\]
+
+\vspace{1em}
+
+\item \textbf{Exercise 4.4.2: DFA Minimization (Larger Example)}
+
+\textbf{Given Transition Table:}
+
+\[
+\begin{array}{c|cc}
+    & 0 & 1 \\
+    \hline
+    \rightarrow A & B & E \\
+    B & C & F \\
+    *C & D & H \\
+    D & E & I \\
+    E & F & H \\
+    *F & G & B \\
+    G & H & B \\
+    H & I & C \\
+    *I & A & E \\
+\end{array}
+\]
+
+\textbf{a) Distinguishability Table:}
+
+Final states are \( C, F, I \). These are found to be equivalent and merged.
+
+\textbf{b) Minimized DFA:}
+
+Merge \( C, F, I \to \text{CFI} \)
+
+\[
+\begin{array}{c|cc|c}
+    \text{State} & 0 & 1 & \text{Accept?} \\
+    \hline
+    \rightarrow A & B & E & No \\
+    B & \text{CFI} & \text{CFI} & No \\
+    \text{CFI} & D & H & Yes \\
+    D & E & \text{CFI} & No \\
+    E & \text{CFI} & H & No \\
+    G & H & B & No \\
+    H & \text{CFI} & \text{CFI} & No \\
+\end{array}
+\]
+
+\end{itemize}
+
+\subsection{Exploration}
+
+This week's homework emphasized the process of converting DFAs to regular expressions and minimizing DFAs using both the state elimination and distinguishability table methods. By systematically eliminating states or computing equivalent expressions through dynamic construction, we deepen our grasp on how regular languages can be represented and optimized both algebraically and structurally. Minimization shows the elegance and efficiency of theoretical computer science when reducing redundancy.
+
+\subsection{Question}
+
+Given the exponential blow-up risk in DFA to regular expression conversions, what are some modern tools or heuristics used in compilers or regex engines to efficiently simplify or avoid full state elimination?
+
+\section{Week 6: Turing Machines}
+
+\subsection{Homework}
+
+\begin{itemize}[leftmargin=*]
+
+\item \textbf{Problem 1: TM for \( L = \{10^n : n \in \mathbb{N} \} \) and return \( 10^{n+1} \)}
+
+\textbf{Idea:}  
+The Turing Machine (TM) scans the input \(10^n\), moves to the end of the string, and appends an extra 0 at the end.
+
+\begin{itemize}
+    \item \textbf{States:} \( q_0 \) (start), \( q_1 \) (move right to the end), \( q_2 \) (write extra 0), \( q_{accept} \)
+    \item \textbf{Alphabet:} \{0, 1, B\}
+    \item \textbf{Transitions:}
+    \[
+    \begin{aligned}
+    \delta(q_0, 1) &= (q_1, 1, R) \\
+    \delta(q_1, 0) &= (q_1, 0, R) \\
+    \delta(q_1, B) &= (q_2, 0, S) \\
+    \delta(q_2, 0) &= (q_{accept}, 0, S)
+    \end{aligned}
+    \]
+\end{itemize}
+
+\vspace{1em}
+
+\item \textbf{Problem 2: TM for \( L = \{10^n : n \in \mathbb{N} \} \) and return 1}
+
+\textbf{Idea:}  
+The TM erases all 0s and leaves only the initial 1.
+
+\begin{itemize}
+    \item \textbf{States:} \( q_0 \) (start), \( q_1 \) (erase 0s), \( q_2 \) (go back left), \( q_3 \) (halt with 1), \( q_{accept} \)
+    \item \textbf{Alphabet:} \{0, 1, B\}
+    \item \textbf{Transitions:}
+    \[
+    \begin{aligned}
+    \delta(q_0, 1) &= (q_1, 1, R) \\
+    \delta(q_1, 0) &= (q_1, B, R) \\
+    \delta(q_1, B) &= (q_2, B, L) \\
+    \delta(q_2, 1) &= (q_3, 1, S) \\
+    \delta(q_3, 1) &= (q_{accept}, 1, S)
+    \end{aligned}
+    \]
+\end{itemize}
+
+\vspace{1em}
+
+\item \textbf{Problem 3: TM that swaps 0s and 1s in a binary string}
+
+\textbf{Idea:}  
+The machine first reads left to right and replaces 0 with a temporary marker \(X\) and 1 with \(Y\). Then it returns to the beginning and replaces \(X \rightarrow 1\) and \(Y \rightarrow 0\).
+
+\begin{itemize}
+    \item \textbf{States:} \( q_0 \) (marking), \( q_1 \) (return left), \( q_2 \) (finalizing), \( q_{accept} \)
+    \item \textbf{Transitions:}
+    \[
+    \begin{aligned}
+    \delta(q_0, 0) &= (q_0, X, R) \\
+    \delta(q_0, 1) &= (q_0, Y, R) \\
+    \delta(q_0, B) &= (q_1, B, L) \\
+    \delta(q_1, X) &= (q_1, X, L) \\
+    \delta(q_1, Y) &= (q_1, Y, L) \\
+    \delta(q_1, B) &= (q_2, B, R) \\
+    \delta(q_2, X) &= (q_2, 1, R) \\
+    \delta(q_2, Y) &= (q_2, 0, R) \\
+    \delta(q_2, B) &= (q_{accept}, B, S)
+    \end{aligned}
+    \]
+\end{itemize}
+
+\end{itemize}
+
+\subsection{Exploration}
+
+This homework introduces foundational Turing Machine operations, from simple appending and deletion tasks to full string transformation. These problems help illustrate how abstract machines manipulate symbols on a tape to perform logic-driven operations. The clarity of the TM transition design makes it easier to see the progression from finite automata to Turing-complete models capable of full computation.
+
+\subsection{Question}
+
+What optimizations exist in real-world implementations of Turing-equivalent machines (e.g., CPU architectures) to avoid the inefficiencies of multi-pass operations like the two-phase symbol replacement in Problem 3?
+
+\section{Week 7: Decidability and Language Classification}
+
+\subsection{Homework}
+
+\begin{itemize}[leftmargin=*]
+
+\item \textbf{Exercise 1: Classifying Languages}
+
+Each language is analyzed based on its position in the hierarchy of decidable, recursively enumerable (r.e.), and co-r.e. languages.
+
+\begin{enumerate}
+    \item \( L_1 := \{ M \mid M \text{ halts on itself} \} \)
+
+    \begin{itemize}
+        \item This is a version of the \textit{diagonal halting problem}.
+        \item \textbf{Classification:}
+        \begin{itemize}
+            \item Not decidable (reducible from the halting problem),
+            \item Not r.e. (no TM can semi-decide it),
+            \item Not co-r.e. (its complement is not r.e.).
+        \end{itemize}
+    \end{itemize}
+
+    \item \( L_2 := \{ (M, w) \mid M \text{ halts on } w \} \)
+
+    \begin{itemize}
+        \item This is the classic \textit{Halting Problem}.
+        \item \textbf{Classification:}
+        \begin{itemize}
+            \item Not decidable,
+            \item Recursively enumerable (r.e.) — simulate \( M \) on \( w \),
+            \item Not co-r.e.
+        \end{itemize}
+    \end{itemize}
+
+    \item \( L_3 := \{ (M, w, k) \mid M \text{ halts on } w \text{ in at most } k \text{ steps} \} \)
+
+    \begin{itemize}
+        \item \textbf{Classification:}
+        \begin{itemize}
+            \item Decidable — simulate \( M \) on \( w \) for at most \( k \) steps.
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\vspace{1em}
+
+\item \textbf{Exercise 2: True/False on Closure Properties}
+
+\begin{enumerate}
+    \item \textbf{True.} The union of two decidable languages is decidable.  
+    \textit{(Run both deciders; accept if either accepts.)}
+
+    \item \textbf{True.} The class of decidable languages is closed under complement.  
+    \textit{(Flip accept/reject in the decider.)}
+
+    \item \textbf{True.} If \( L \) is decidable, then \( L^* \) is decidable.  
+    \textit{(Nondeterministically split input and test each part with \( L \)'s decider.)}
+
+    \item \textbf{True.} The union of two r.e. languages is r.e.  
+    \textit{(Use dovetailing to run both TMs.)}
+
+    \item \textbf{False.} The complement of an r.e. language is not necessarily r.e.  
+    \textit{(Counterexample: the Halting Problem is r.e., but its complement is not.)}
+
+    \item \textbf{False.} \( L^* \) may not be r.e. even if \( L \) is.  
+    \textit{(Let \( L = \{ w \mid M_w \text{ halts} \} \); then \( L^* \) is not necessarily r.e.)}
+\end{enumerate}
+
+\end{itemize}
+
+\subsection{Exploration}
+
+This assignment explores the boundaries of computation by classifying problems based on their decidability and enumerability. Distinguishing between r.e. and co-r.e. languages sharpens our understanding of what Turing machines can do — both in terms of acceptance and rejection. These concepts underpin the limits of algorithmic verification, particularly in fields like software verification and logic where halting behavior cannot always be determined.
+
+\subsection{Question}
+
+How do modern programming language safety checks and static analysis tools navigate the undecidability of halting and related problems, and what compromises do they make to provide useful results in practice?
+
+\section{Weeks 8 \& 9: Asymptotic Analysis and Growth Rate Comparisons}
+
+\subsection{Homework}
+
+\begin{itemize}[leftmargin=*]
+
+\item \textbf{Exercise 1: Order of Growth Comparison}
+
+Order the following functions from slowest to fastest:
+
+\[
+\begin{aligned}
+&\log(\log n) \prec \log n \prec e^{\log n} = n \prec e^{2 \log n} = n^2 \prec 2^n \prec e^n \prec n! \prec 2^{2^n}
+\end{aligned}
+\]
+
+\textbf{Classification:}
+\begin{itemize}
+    \item \textbf{Slowest:} \( \log(\log n) \) (double logarithmic)
+    \item \( \log n \) (logarithmic)
+    \item \( e^{\log n} = n \)
+    \item \( e^{2 \log n} = n^2 \)
+    \item \( 2^n \)
+    \item \( e^n \)
+    \item \( n! \) (super-exponential)
+    \item \textbf{Fastest:} \( 2^{2^n} \) (double exponential)
+\end{itemize}
+
+\vspace{1em}
+
+\item \textbf{Exercise 2: Proving Big-O Properties}
+
+Let \( f, g, h : \mathbb{N} \to \mathbb{R}_{\geq 0} \). Prove the following:
+
+\begin{enumerate}
+    \item \( f \in O(f) \)  
+    \textit{(Trivially true with constant \( c = 1 \))}
+
+    \item If \( c > 0 \), then \( O(c \cdot f) = O(f) \)  
+    \textit{(Multiplicative constants do not affect Big-O classes)}
+
+    \item If \( f(n) \leq g(n) \) for large \( n \), then \( O(f) \subseteq O(g) \)
+
+    \item If \( O(f) \subseteq O(g) \), then \( O(f + h) \subseteq O(g + h) \)
+
+    \item If \( h(n) > 0 \) and \( O(f) \subseteq O(g) \), then \( O(f \cdot h) \subseteq O(g \cdot h) \)
+\end{enumerate}
+
+\vspace{1em}
+
+\item \textbf{Exercise 3: Polynomial Growth Comparisons}
+
+\begin{enumerate}
+    \item If \( j \leq k \), then \( O(n^j) \subseteq O(n^k) \)
+
+    \item If \( j \leq k \), then \( O(n^j + n^k) \subseteq O(n^k) \)
+
+    \item \( O\left(\sum_{i=0}^{k} a_i n^i \right) = O(n^k) \)  
+    \textit{(Highest-degree term dominates)}
+
+    \item \( O(\log n) \subseteq O(n) \)
+
+    \item \( O(n \log n) \subseteq O(n^2) \)
+\end{enumerate}
+
+\vspace{1em}
+
+\item \textbf{Exercise 4: Comparing Growth Classes}
+
+\begin{enumerate}
+    \item \( O(n) \supset O(\sqrt{n}) \)  
+    \textit{(Square root grows slower)}
+
+    \item \( O(n^2) \subset O(2^n) \)  
+    \textit{(Exponential outpaces polynomial)}
+
+    \item \( O(\log n) \subset O(\log^2 n) \)
+
+    \item \( O(2^n) \subset O(3^n) \)
+
+    \item \( O(\log^2 n) = O(\log^3 n) \)  
+    \textit{(Difference is constant factor; change-of-base)}
+\end{enumerate}
+
+\vspace{1em}
+
+\item \textbf{Exercise 5: Sorting Algorithm Runtime Comparison}
+
+\begin{itemize}
+    \item \textbf{Bubble Sort vs Insertion Sort:}  
+    Both are \( O(n^2) \), but insertion sort is generally faster in practice due to fewer swaps.
+
+    \item \textbf{Insertion Sort vs Merge Sort:}  
+    Merge sort is asymptotically faster: \( O(n \log n) \) vs \( O(n^2) \).
+
+    \item \textbf{Merge Sort vs Quick Sort:}  
+    Both average \( O(n \log n) \), but quick sort has a worse-case of \( O(n^2) \) unless properly optimized (e.g., randomized pivots or tail call optimizations).
+\end{itemize}
+
+\end{itemize}
+
+\subsection{Exploration}
+
+This dual-week homework provided a rigorous comparison of function growth classes through asymptotic analysis. It reinforces the idea that constants and lower-order terms become irrelevant as inputs scale, and shows how subtle differences in logarithmic and exponential bases impact performance. The comparative sorting algorithm analysis emphasizes the real-world importance of choosing optimal algorithms, especially when average and worst-case complexities diverge.
+
+\subsection{Question}
+
+In algorithm design, how do practitioners balance worst-case guarantees against average-case efficiency, especially when the faster algorithm has a higher risk of worst-case performance (e.g., Quick Sort vs Merge Sort)?
+
+\section{Weeks 10 \& 11: CNF Conversion, Satisfiability, and Sudoku Encoding}
+
+\subsection{Homework}
+
+\begin{itemize}[leftmargin=*]
+
+\item \textbf{Exercise 1: Convert to CNF (Conjunctive Normal Form)}
+
+\begin{enumerate}
+    \item \( \varphi_1 := \neg((a \land b) \lor (\neg c \land d)) \)
+    \[
+    \begin{aligned}
+    \varphi_1 &= \neg((a \land b) \lor (\neg c \land d)) \\
+              &= \neg(a \land b) \land \neg(\neg c \land d) \quad \text{(De Morgan's Law)} \\
+              &= (\neg a \lor \neg b) \land (c \lor \neg d)
+    \end{aligned}
+    \]
+
+    \item \( \varphi_2 := \neg((p \lor q) \rightarrow (r \land \neg s)) \)
+    \[
+    \begin{aligned}
+    \varphi_2 &= \neg(\neg(p \lor q) \lor (r \land \neg s)) \\
+              &= \neg((\neg p \land \neg q) \lor (r \land \neg s)) \quad \text{(De Morgan)} \\
+              &= \neg(\neg p \land \neg q) \land \neg(r \land \neg s) \\
+              &= (p \lor q) \land (\neg r \lor s)
+    \end{aligned}
+    \]
+\end{enumerate}
+
+\vspace{1em}
+
+\item \textbf{Exercise 2: Propositional Satisfiability}
+
+\begin{enumerate}
+    \item \( \psi_1 := (a \lor \neg b) \land (\neg a \lor b) \land (\neg a \lor \neg b) \)
+
+    Test assignment: \( a = 0, b = 0 \)
+    \[
+    \begin{aligned}
+    (a \lor \neg b) &= 0 \lor 1 = 1 \\
+    (\neg a \lor b) &= 1 \lor 0 = 1 \\
+    (\neg a \lor \neg b) &= 1 \lor 1 = 1 \\
+    \end{aligned}
+    \]
+
+    \textbf{Satisfiable}. Valid assignment: \( a = 0, b = 0 \)
+
+    \item \( \psi_2 := (\neg p \lor q) \land (\neg q \lor r) \land \neg(\neg p \lor r) \)
+
+    Rewrite last clause:
+    \[
+    \psi_2 = (\neg p \lor q) \land (\neg q \lor r) \land (p \land \neg r)
+    \]
+
+    From \( p \land \neg r \), we need \( q = 1 \) from \( \neg p \lor q \), and \( \neg q = 0 \Rightarrow r = 1 \) from \( \neg q \lor r \), which contradicts \( \neg r \).  
+    \textbf{Unsatisfiable}.
+
+    \item \( \psi_3 := (x \lor y) \land (\neg x \lor y) \land (x \lor \neg y) \land (\neg x \lor \neg y) \)
+
+    Test all four truth assignments:
+    \begin{itemize}
+        \item \( x = 0, y = 0 \Rightarrow (x \lor y) = 0 \)
+        \item \( x = 0, y = 1 \Rightarrow (x \lor \neg y) = 0 \)
+        \item \( x = 1, y = 0 \Rightarrow (\neg x \lor y) = 0 \)
+        \item \( x = 1, y = 1 \Rightarrow (\neg x \lor \neg y) = 0 \)
+    \end{itemize}
+    \textbf{Unsatisfiable}.
+\end{enumerate}
+
+\vspace{1em}
+
+\item \textbf{Exercise 3: Encoding Sudoku Constraints in CNF}
+
+Let \( x_{r,c,v} \) be true if cell \( (r, c) \) contains value \( v \), where \( r, c, v \in \{1, \dots, 9\} \). The full CNF formula is:
+
+\[
+\varphi := C_1 \land C_2 \land C_3 \land C_4 \land C_5 \land C_6
+\]
+
+\begin{itemize}
+    \item \( C_1 \): Each cell must contain \textbf{at least one} value
+    \[
+    C_1 := \bigwedge_{r=1}^{9} \bigwedge_{c=1}^{9} \left( \bigvee_{v=1}^{9} x_{r,c,v} \right)
+    \]
+
+    \item \( C_2 \): Each cell contains \textbf{at most one} value
+    \[
+    C_2 := \bigwedge_{r=1}^{9} \bigwedge_{c=1}^{9} \bigwedge_{1 \leq v_1 < v_2 \leq 9} (\neg x_{r,c,v_1} \lor \neg x_{r,c,v_2})
+    \]
+
+    \item \( C_3 \): Each \textbf{row} contains every number
+    \[
+    C_3 := \bigwedge_{r=1}^{9} \bigwedge_{v=1}^{9} \left( \bigvee_{c=1}^{9} x_{r,c,v} \right)
+    \]
+
+    \item \( C_4 \): Each \textbf{column} contains every number
+    \[
+    C_4 := \bigwedge_{c=1}^{9} \bigwedge_{v=1}^{9} \left( \bigvee_{r=1}^{9} x_{r,c,v} \right)
+    \]
+
+    \item \( C_5 \): Each 3x3 \textbf{block} contains every number
+
+    Let block coordinates be indexed by \( br, bc \in \{0,1,2\} \)
+    \[
+    C_5 := \bigwedge_{v=1}^{9} \bigwedge_{br=0}^{2} \bigwedge_{bc=0}^{2} \left( \bigvee_{r=3br+1}^{3br+3} \bigvee_{c=3bc+1}^{3bc+3} x_{r,c,v} \right)
+    \]
+
+    \item \( C_6 \): Encode the \textbf{given clues}
+
+    For known values \( G = \{(r_i, c_i, v_i)\} \)
+    \[
+    C_6 := \bigwedge_{(r_i, c_i, v_i) \in G} x_{r_i,c_i,v_i}
+    \]
+\end{itemize}
+
+\end{itemize}
+
+\subsection{Exploration}
+
+This homework focused on translating logical formulas into Conjunctive Normal Form (CNF) and understanding satisfiability. The systematic breakdown of Sudoku encoding into CNF also highlights how formal logic underpins constraint satisfaction problems, especially in artificial intelligence and automated reasoning. The ability to represent puzzles like Sudoku in logic illustrates the expressive power of propositional formulas.
+
+\subsection{Question}
+
+How do modern SAT solvers efficiently handle real-world CNF encodings with millions of variables, and what optimizations make them practical for applications like AI planning and verification?
+
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem[ALG]{ALG}
+Algorithm Analysis, Chapman University, 2025.
+
+\bibitem[Sip]{Sipser}
+Michael Sipser, \textit{Introduction to the Theory of Computation}, Cengage Learning, 3rd ed., 2012.
+
+\bibitem[CLRS]{CLRS}
+Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein, \textit{Introduction to Algorithms}, MIT Press, 3rd ed., 2009.
+
+\bibitem[DM]{Rosen}
+Kenneth H. Rosen, \textit{Discrete Mathematics and Its Applications}, McGraw-Hill, 7th ed., 2012.
+
+\bibitem[AI]{AI}
+Stuart Russell and Peter Norvig, \textit{Artificial Intelligence: A Modern Approach}, Pearson, 4th ed., 2020.
+
+\end{thebibliography}
+
+
+\end{document}
