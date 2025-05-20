@@ -877,6 +877,86 @@ This homework focused on translating logical formulas into Conjunctive Normal Fo
 
 How do modern SAT solvers efficiently handle real-world CNF encodings with millions of variables, and what optimizations make them practical for applications like AI planning and verification?
 
+\section{Weeks 12 \& 13: Maximal Flow and Minimal Cut}
+
+\subsection{Homework}
+
+\begin{itemize}[leftmargin=*]
+
+\item \textbf{Problem: Ford-Fulkerson Maximum Flow Algorithm}
+
+Given a flow network \( G \), compute the maximal flow using the Ford-Fulkerson method.
+
+\begin{enumerate}
+    \item \textbf{Augmenting Path 1:} \( s \rightarrow a \rightarrow b \rightarrow d \rightarrow t \)
+
+    Bottleneck capacity:
+    \[
+    \min(8, 2, 8, 10) = 2
+    \]
+    Update flows accordingly.
+
+    \item \textbf{Augmenting Path 2:} \( s \rightarrow a \rightarrow c \rightarrow d \rightarrow t \)
+
+    Bottleneck:
+    \[
+    \min(6, 4, 6, 10) = 4
+    \]
+    Update flows.
+
+    \item \textbf{Augmenting Path 3:} \( s \rightarrow b \rightarrow d \rightarrow t \)
+
+    Bottleneck:
+    \[
+    \min(10, 6, 10) = 6
+    \]
+    Update flows.
+\end{enumerate}
+
+\textbf{Total flow into \( t \):} \( 2 + 4 + 6 = 12 \)  
+\textbf{Maximum flow:}  
+\[
+\boxed{12}
+\]
+
+\vspace{1em}
+
+\item \textbf{Minimal Cut Analysis}
+
+After completing Ford-Fulkerson, the reachable nodes from \( s \) in the residual graph are:
+\[
+\{s\}
+\]
+So, one minimal cut separates \( s \) from \( t \) by removing edges from \( \{s\} \) to \( \{a, b, c, d, t\} \):
+
+\textbf{Cut edges:} \( s \rightarrow a \), \( s \rightarrow b \)  
+\textbf{Cut capacity:} \( 10 + 10 = 20 \)
+
+However, a minimal cut with capacity equal to the max flow (12) is:
+\[
+\text{Cut: } (a \rightarrow c), (b \rightarrow d)
+\]
+\textbf{Cut capacity:} \( 4 + 8 = \boxed{12} \)
+
+\vspace{1em}
+
+\item \textbf{Is the Maximal Flow Unique?}
+
+No, the maximal flow is not unique.  
+Ford-Fulkerson’s output depends on the order of augmenting paths chosen. Multiple distributions of flow can result in the same total max flow, but with different edge-level allocations.
+
+\end{itemize}
+
+\subsection{Exploration}
+
+This exercise highlights the fundamental principles of network flow optimization. The Ford-Fulkerson algorithm exemplifies how local decisions (augmenting paths) contribute to a global solution (maximum flow). The fact that different augmenting path orders can yield different valid flows demonstrates both the flexibility and non-determinism in algorithmic execution. 
+
+Understanding the max-flow min-cut theorem provides a dual perspective on flow problems: it connects how much "can be pushed" through a network to how the network can be "cut" to stop all flow. This duality is foundational in operations research, logistics, and even data science when modeling constraints and bottlenecks in systems.
+
+\subsection{Question}
+
+In real-world networks with dynamic capacities or multiple commodities, how does the concept of maximum flow adapt, and what algorithms extend Ford-Fulkerson to support these more complex scenarios?
+
 \newpage
 \begin{thebibliography}{9}
 
