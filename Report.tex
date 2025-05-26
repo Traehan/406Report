@@ -109,7 +109,7 @@ Overall, this report shows how much I’ve grown in understanding what computer 
 
 Words \texttt{"0010"} and \texttt{"1101"} end in q1, while \texttt{"1100"} does not.
     
-    % Add more problems as needed
+
 \end{itemize}
 
 \subsection{Exploration}
@@ -118,72 +118,79 @@ The introduction to automata theory lays the foundation for understanding how ab
 \subsection{Question}
 In the beginning, how did the development of automata theory influence early computing and programming languages, and were there any key breakthroughs that directly shaped how we design and understand computation today?
 
-% Repeat \\section for each week as needed
 \section{Week 3: Operations on Automata}
+
 \subsection{Homework}
+
 \begin{itemize}[leftmargin=*]
-\item \textbf{Problem 1:} Description of the Language Accepted by $\mathcal{A}^{(2)}$
-The automaton $\mathcal{A}^{(2)}$ accepts the language:
+
+\item \textbf{Problem 1: Description of the Language Accepted by \( \mathcal{A}^{(2)} \)}
+
+The automaton \( \mathcal{A}^{(2)} \) accepts the language:
 \[
 L(\mathcal{A}^{(2)}) = \{ w \in \{a,b\}^* \mid |w| \text{ is odd and every letter at an odd position is } a \}
 \]
-That is, all words over the alphabet $\{a,b\}$ that have an odd length, and every letter in an odd-numbered position (1st, 3rd, 5th, etc.) is the letter $a$.
+That is, all words over the alphabet \( \{a,b\} \) that have an odd length, and every letter in an odd-numbered position (1st, 3rd, 5th, etc.) is the letter \( a \).
 
-\section*{2. Computation of Extended Transition Functions}
+\item \textbf{Problem 2: Computation of Extended Transition Functions}
 
-\subsection*{a) For $\mathcal{A}^{(1)}$, compute $\widehat{\delta^{(1)}}(1, abaa)$}
+\textbf{a) For \( \mathcal{A}^{(1)} \), compute \( \widehat{\delta^{(1)}}(1, abaa) \)}
 
-Given that $\mathcal{A}^{(1)}$ accepts non-empty words where no two consecutive letters are the same, and assuming the states are numbered, we proceed step by step:
-
-\begin{itemize}
-    \item Start at state $1$
-    \item Read $a$: move to state $2$
-    \item Read $b$: move to state $1$
-    \item Read $a$: move to state $2$
-    \item Read $a$: since the previous letter was also $a$, and two consecutive letters are the same, this transition is invalid.
-\end{itemize}
-
-Therefore, the computation halts, and the word $abaa$ is rejected by $\mathcal{A}^{(1)}$.
-
-\subsection*{b) For $\mathcal{A}^{(2)}$, compute $\widehat{\delta^{(2)}}(1, abba)$}
-
-Assuming the transition function $\delta^{(2)}$ is defined as per the automaton's description:
+Given that \( \mathcal{A}^{(1)} \) accepts non-empty words where no two consecutive letters are the same, and assuming the states are numbered, we proceed step by step:
 
 \begin{itemize}
-    \item Start at state $1$
-    \item Read $a$: move to state $2$
-    \item Read $b$: move to state $3$
-    \item Read $b$: move to state $2$
-    \item Read $a$: move to state $3$
+    \item Start at state 1
+    \item Read \( a \): move to state 2
+    \item Read \( b \): move to state 1
+    \item Read \( a \): move to state 2
+    \item Read \( a \): since the previous letter was also \( a \), and two consecutive letters are the same, this transition is invalid.
 \end{itemize}
 
-After processing the entire input $abba$, the automaton ends in state $3$. If state $3$ is an accepting state, then the word is accepted; otherwise, it is rejected. Based on the language description, since $abba$ has even length and the language requires odd length, $abba$ is rejected by $\mathcal{A}^{(2)}$.
+Therefore, the computation halts, and the word \( abaa \) is rejected by \( \mathcal{A}^{(1)} \).
 
-\section*{Problem Statement}
+\textbf{b) For \( \mathcal{A}^{(2)} \), compute \( \widehat{\delta^{(2)}}(1, abba) \)}
 
-Let \( n \) be a natural number, and let \( P(m) \) be a property pertaining to the natural numbers such that whenever \( P(m) \) is true, \( P(m++) \) is also true. Show that if \( P(n) \) is true, then \( P(m) \) is true for all \( m \geq n \). This principle is sometimes referred to as the principle of induction starting from the base case \( n \).
+Assuming the transition function \( \delta^{(2)} \) is defined as per the automaton’s description:
 
-\section*{Solution}
+\begin{itemize}
+    \item Start at state 1
+    \item Read \( a \): move to state 2
+    \item Read \( b \): move to state 3
+    \item Read \( b \): move to state 2
+    \item Read \( a \): move to state 3
+\end{itemize}
 
-We aim to prove that if \( P(n) \) is true and \( P(m) \Rightarrow P(m++) \) holds for all \( m \in \mathbb{N} \), then \( P(m) \) is true for all \( m \geq n \).
+After processing the entire input \( abba \), the automaton ends in state 3. If state 3 is an accepting state, then the word is accepted; otherwise, it is rejected. Based on the language description, since \( abba \) has even length and the language requires odd length, \( abba \) is rejected by \( \mathcal{A}^{(2)} \).
 
-\subsection*{Approach}
+\item \textbf{Problem 3: Principle of Induction Starting from Base Case \( n \)}
 
-Define a new property \( Q(k) := P(n + k) \) for \( k \in \mathbb{N} \). Our goal is to show that \( Q(k) \) is true for all \( k \in \mathbb{N} \), which would imply that \( P(m) \) is true for all \( m \geq n \).
+Let \( n \in \mathbb{N} \), and let \( P(m) \) be a property such that whenever \( P(m) \) is true, \( P(m++) \) is also true. Show that if \( P(n) \) is true, then \( P(m) \) is true for all \( m \geq n \).
 
-\subsection*{Base Case}
+\textbf{Solution:}
 
-For \( k = 0 \), we have \( Q(0) = P(n + 0) = P(n) \), which is given to be true.
+\begin{itemize}
+    \item Define a new property \( Q(k) := P(n + k) \) for \( k \in \mathbb{N} \). We aim to show that \( Q(k) \) is true for all \( k \), which implies \( P(m) \) is true for all \( m \geq n \).
+    
+    \item \textbf{Base Case:} \( k = 0 \Rightarrow Q(0) = P(n) \), which is given to be true.
+    
+    \item \textbf{Inductive Step:} Assume \( Q(k) \) is true, i.e., \( P(n + k) \) is true. Since \( P(m) \Rightarrow P(m++) \), it follows that \( P(n + k) \Rightarrow P(n + k + 1) \), so \( Q(k+1) = P(n + k + 1) \) is true.
+\end{itemize}
 
-\subsection*{Inductive Step}
-
-Assume \( Q(k) \) is true for some \( k \in \mathbb{N} \), i.e., \( P(n + k) \) is true. Since \( P(m) \Rightarrow P(m++) \) for all \( m \), it follows that \( P(n + k) \Rightarrow P((n + k)++) = P(n + k + 1) \). Therefore, \( Q(k + 1) = P(n + k + 1) \) is true.
-
-\subsection*{Conclusion}
-
-By the principle of mathematical induction, \( Q(k) \) is true for all \( k \in \mathbb{N} \). Consequently, \( P(m) \) is true for all \( m \geq n \).
+\textbf{Conclusion:}  
+By the principle of mathematical induction, \( Q(k) \) holds for all \( k \in \mathbb{N} \). Therefore, \( P(m) \) is true for all \( m \geq n \).
 
 \end{itemize}
+
+\subsection{Exploration}
+
+This week's focus on extended transition functions helped clarify how automata process full strings in a step-by-step manner. Tracing input through an automaton and identifying rejection or acceptance based on the transition logic emphasized how precise and rule-driven these models are. It also demonstrated the difference between what a machine is “allowed” to do versus what it’s “supposed” to do, according to language constraints. 
+
+The induction problem served as a good reminder that formal proof techniques are critical in establishing correctness over all cases, not just examples. The approach of shifting the induction base to \( n \) rather than 0 shows how flexible and generalizable mathematical induction can be when adapted to different contexts.
+
+\subsection{Question}
+
+How can extended transition functions be used in practice when designing compilers or protocol validators that must accept or reject entire sequences of input based on state transitions?
+
 
 \section{Week 4: NFAs and Determinization}
 
