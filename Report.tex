@@ -38,6 +38,17 @@ This document serves as a cumulative report for the CPSC-406 course. Each week i
 \tableofcontents
 \newpage
 
+\section{Introduction}
+
+This report is a collection of what I’ve learned and worked on throughout the CPSC-406 course. Each week, I completed assignments that helped me understand new ideas in computer science—from how machines read and process input, to how we measure the speed and limits of algorithms. Along the way, I included my own thoughts and questions to explore the material more deeply.
+
+We started with basic ideas like finite automata and regular expressions, and gradually moved into more advanced topics like Turing machines, undecidability, and algorithm analysis. Some problems focused on theory, like proving things with induction or breaking down how machines work. Others were more hands-on, like using Ford-Fulkerson to find the max flow in a network or turning logic puzzles like Sudoku into code-like rules.
+
+I also wrote a reflection called \textit{“Beyond the Code: Understanding the Essence of Algorithms”} where I share how this class helped me see that writing good code isn’t just about syntax—it’s about solving problems clearly, efficiently, and thoughtfully.
+
+Overall, this report shows how much I’ve grown in understanding what computer science is really about: not just programming, but thinking deeply about how problems are solved—and how we can build tools to do that better.
+
+
 \section{Week 1: Intro To Automata}
 
 \subsection{Homework}
@@ -958,6 +969,25 @@ Understanding the max-flow min-cut theorem provides a dual perspective on flow p
 In real-world networks with dynamic capacities or multiple commodities, how does the concept of maximum flow adapt, and what algorithms extend Ford-Fulkerson to support these more complex scenarios?
 
 \newpage
+
+\section{Synthesis}
+\subsection*{Beyond the Code: Understanding the Essence of Algorithms}
+
+In computer science, I was easily caught up in implementation details: loops, conditionals, and syntax quirks, forgetting to step back and understand the deeper structure that makes an algorithm powerful or elegant. Algorithm analysis offers a perspective in which we can determine not just what the code does, but how well it performs, and why certain approaches are more efficient than others, and find the trade-offs beneath the surface of it. Through this course and personal research, I’ve realized that the important essence of algorithms doesn’t lie in the code, but in the reasoning behind the code.
+
+In general, algorithm analysis is about modeling problems and predicting behavior. For example, there is more than mathematical abstraction for Big-O notation; it turns into a language for describing how solutions scale as data expands. Whether comparing mergesort: \( O(n \log n) \) to bubble sort: \( O(n^2) \), or studying polynomial versus exponential runtimes in dynamic programming, complexity makes us think like engineers, prioritizing feasibility, cost, and performance under criteria and constraints.
+
+One important realization for me was that algorithm analysis is not just theoretical. It’s a bridge between computation and real-world systems. For example, like our max-flow problem sets, we used the Ford-Fulkerson algorithm to not just compute numbers, but to also model throughput, bottlenecks, and capacity, which I discovered are concepts that apply in everything from internet traffic routing to supply chain logistics. The abstraction of graphs and flows helped reveal to me how simple rules, when layered thoughtfully, can show surprisingly powerful solutions.
+
+Additionally, analysis pushed for a deeper thought process and intellectual discipline. It forces us to ask hard questions, like: \textit{Is this the most efficient way? What assumptions am I making? What happens in the worst case?} These questions are not just about runtime—they are reflections of good problem-solving habits. In this sense, algorithm analysis cultivates a mindset, not just a skillset.
+
+To conclude, going beyond the code means knowing that code is like a vehicle, and not the destination. Behind every efficient implementation is a conceptual model built on logic, mathematics, and abstraction. To understand the essence of algorithms is to value the elegance of this invisible structure surrounding it, where clarity, precision, and strategy are tied into one. As I continue to study programming languages and systems, I now carry with me not just the ability to write better code, but to think more effectively about the problems that code is meant to solve.
+
+\section{Participation}
+
+Discord Questions
+
+\newpage
 \begin{thebibliography}{9}
 
 \bibitem[ALG]{ALG}
@@ -974,6 +1004,8 @@ Kenneth H. Rosen, \textit{Discrete Mathematics and Its Applications}, McGraw-Hil
 
 \bibitem[AI]{AI}
 Stuart Russell and Peter Norvig, \textit{Artificial Intelligence: A Modern Approach}, Pearson, 4th ed., 2020.
+
+\bibitem[ITALC]{italc} J.E. Hopcraft, \textit{Introduction to Automata Theory, Language, and Computation}, Pearson, 2006. 
 
 \end{thebibliography}
 
